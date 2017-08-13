@@ -57,8 +57,6 @@ function start() {
                 }
             }
         ]).then(function(answers) {
-            // Use user feedback for... whatever!! 
-            console.log(answers);
             //this variable will hold the selected item
             var selected;
             //this loop will find the item in the database and save it to the 'selected' variable
@@ -67,27 +65,44 @@ function start() {
                     selected = results[i];
                 }
             }
-            console.log(selected);
+            //this condition checks for inventory level and reduces inventory in database
             if (selected.stock_quantity >= parseInt(answers.quantity)) {
                 console.log("Sounds Good! Fulfilling Order Now...\n");
+                //this will update the number of the invnetory
+                var reduce = parseInt(selected.stock_quantity) - parseInt(answers.quantity);
 
+                //var reduce = selected.stock_quantity.toString();
+                var total = parseInt(answers.quantity) * parseInt(selected.price);
+                //here is the query to update the inventory in the dabase
+                connection.query("UPDATE products SET ? WHERE ?", [{
+                        stock_quantity: reduce.toString()
+                    },
+                    {
+                        id: selected.id
+                    }
+                ], function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("Order Complete.  Your total is: $" + total + " Thank you. \n");
+                        start();
+
+                    }
+                });
             } else {
                 console.log("Sorry, not enough items available.");
                 start();
             }
-            //about 2 hrs 
-            checkStore(selected, answers.quantity);
+
         });
     });
 
 }
+//3
 
+/*this function should update the store inventory.  Accepts the product and quantity.  */
+function updateStore(product, quantity) {
 
-
-/*this function should check the store to ensure there are enough items in inventory.
-If not, display 'insufficient quantity' and prevent order from going through (also return to menu).
-If there is enough inventory, fulfill the order.  */
-function checkStore(product, quantity) {
 
 
 }
