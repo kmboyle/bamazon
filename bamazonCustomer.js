@@ -69,7 +69,8 @@ function start() {
             if (selected.stock_quantity >= parseInt(answers.quantity)) {
                 console.log("Sounds Good! Fulfilling Order Now...\n");
                 //this will update the number of the invnetory
-                var reduce = parseInt(selected.stock_quantity) - parseInt(answers.quantity);
+                var reduce = 1
+                parseInt(selected.stock_quantity) - parseInt(answers.quantity);
 
                 //var reduce = selected.stock_quantity.toString();
                 var total = parseInt(answers.quantity) * parseInt(selected.price);
@@ -101,15 +102,15 @@ function start() {
 //3
 
 /*this function should update the store inventory.  Accepts the product and quantity.  */
-function updateStore(product, quantity) {
+// function updateStore(product, quantity) {
 
 
 
-}
+// }
 
 /*this function will check the inventory and update the remaining quantity.  Afterwards, show the customer
 the total cost of their purchase.*/
-function updateStore() {
+// function updateStore() {
 
-}
+// }
 //connection.end();
