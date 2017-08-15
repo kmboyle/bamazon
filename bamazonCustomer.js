@@ -1,6 +1,10 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require('cli-table');
+var jsonfile = require('jsonfile');
+var split = require('split-object');
+
+var file = 'products.json';
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -81,6 +85,28 @@ function start() {
                 //now add the sale to the total prodcut sales
                 totalSales = parseInt(selected.product_sales) + sales;
                 //here is the query to update the inventory in the dabase
+                var objArr = [];
+                var obj = {
+                    department_name: selected.department_name,
+                    product: selected.product_name,
+                    sale_amount: sales,
+                    totalDeptSales: totalSales
+                };
+                var write = split(obj).map(function(res) {
+                    res.key;
+                    res.value;
+                    return res;
+                })
+
+                var newObj = split.join(write);
+                objArr.push(newObj);
+
+
+                jsonfile.writeFile(file, objArr, { flag: 'a' }, function(err, obj) {
+                    if (err) console.log(err);
+                })
+
+
                 connection.query("UPDATE products SET ? WHERE ?", [{
                         stock_quantity: reduce.toString(),
                         //adding the new total sales amount to the database

@@ -22,14 +22,16 @@ function start() {
         name: "choice",
         type: "rawlist",
         message: "Welcome,  What you like to do? ",
-        choices: ["View Product Sales by Department", "Create New Department", "Exit"]
+        choices: ["View Product Sales by Department", "Create New Department", "Highest Grossing Department", "Exit"]
     }]).then(function(answers) {
         if (answers.choice === "View Product Sales by Department") {
             viewSales();
 
         } else if (answers.choice === "Create New Department") {
             newDept();
-        } else {
+        } else if (answers.choice === "Highest Grossing Department")
+
+        else {
             console.log("Thanks for visiting, have a nice day!");
             connection.end();
         }
