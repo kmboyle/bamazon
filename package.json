@@ -18,7 +18,10 @@
   "homepage": "https://github.com/kmboyle/bamazon#readme",
   "dependencies": {
     "cli-table": "^0.3.1",
+    "dotenv": "^4.0.0",
     "inquirer": "^3.2.1",
-    "mysql": "^2.14.1"
+    "mysql": "^2.14.1",
+    "object-values-to-array": "^1.0.0",
+    "split-object": "^2.1.1"
   }
 }

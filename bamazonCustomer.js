@@ -59,6 +59,12 @@ function start() {
         ]).then(function(answers) {
             //this variable will hold the selected item
             var selected;
+            //this variable will hold the product sales amount
+            var sales;
+            //reduce will hold the reduced amount of inventory
+            var reduce;
+            //total sales will hold the total amount of all sales in the store
+            var totalSales;
             //this loop will find the item in the database and save it to the 'selected' variable
             for (var i = 0; i < results.length; i++) {
                 if (results[i].id === parseInt(answers.idChoice)) {
@@ -69,14 +75,16 @@ function start() {
             if (selected.stock_quantity >= parseInt(answers.quantity)) {
                 console.log("Sounds Good! Fulfilling Order Now...\n");
                 //this will update the number of the invnetory
-                var reduce = 1
-                parseInt(selected.stock_quantity) - parseInt(answers.quantity);
-
-                //var reduce = selected.stock_quantity.toString();
-                var total = parseInt(answers.quantity) * parseInt(selected.price);
+                reduce = parseInt(selected.stock_quantity) - parseInt(answers.quantity);
+                //first calculate the sale amount based on quantity and price
+                sales = parseInt(answers.quantity) * parseInt(selected.price);
+                //now add the sale to the total prodcut sales
+                totalSales = parseInt(selected.product_sales) + sales;
                 //here is the query to update the inventory in the dabase
                 connection.query("UPDATE products SET ? WHERE ?", [{
-                        stock_quantity: reduce.toString()
+                        stock_quantity: reduce.toString(),
+                        //adding the new total sales amount to the database
+                        product_sales: totalSales.toString()
                     },
                     {
                         id: selected.id
@@ -85,8 +93,22 @@ function start() {
                     if (err) {
                         console.log(err);
                     } else {
-                        console.log("Order Complete.  Your total is: $" + total + " Thank you. \n");
-                        start();
+                        console.log("Order Complete.  Your total is: $" + sales + " Thank you. \n");
+                        inquirer.prompt([ /* Pass your questions in here */ {
+                            message: "Would you like to purchase another item?",
+                            name: "confirm",
+                            type: "confirm"
+                        }]).then(function(answers) {
+                            // Use user feedback for... whatever!! 
+                            if (answers.confirm) {
+
+                                start();
+                            } else {
+                                console.log("Thank you for visiting!");
+                                connection.end();
+                            }
+                        });
+
 
                     }
                 });
@@ -99,18 +121,3 @@ function start() {
     });
 
 }
-//3
-
-/*this function should update the store inventory.  Accepts the product and quantity.  */
-// function updateStore(product, quantity) {
-
-
-
-// }
-
-/*this function will check the inventory and update the remaining quantity.  Afterwards, show the customer
-the total cost of their purchase.*/
-// function updateStore() {
-
-// }
-//connection.end();
