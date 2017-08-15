@@ -20,7 +20,7 @@ connection.connect(function(err) {
 function start() {
     var table = new Table({
         head: ['ID', 'Product', 'Category', 'Price', 'Quantity'],
-        colWidths: [5, 25, 25, 25, 25]
+        colWidths: [5, 15, 15, 15, 15]
     });
     connection.query("SELECT * FROM products", function(err, results) {
         if (err) throw err;
@@ -49,7 +49,6 @@ function start() {
                     break;
                 case "Add New Product":
                     newProduct();
-
                     break;
                 case "Close Store":
                     console.log("Thanks for visiting, have a nice day!");
@@ -64,16 +63,19 @@ function lowInventory() {
     console.log("\nItems that are low in inventory (fewer than 5): ");
     var lowItems = new Table({
         head: ['ID', 'Product', 'Category', 'Price', 'Quantity'],
-        colWidths: [5, 25, 25, 25, 25]
+        colWidths: [5, 15, 15, 15, 15]
     });
-    //run through the table and determine if inventory is less than 5, if so, push to lowItems array
-    for (var i = 0; i < results.length; i++) {
-        if (parseInt(results[i].stock_quantity) < 5) {
-            lowItems.push([results[i].id, results[i].product_name, results[i].department_name, '$' + results[i].price, results[i].stock_quantity]);
+    connection.query("SELECT * FROM products", function(err, results) {
+        //run through the table and determine if inventory is less than 5, if so, push to lowItems array
+        for (var i = 0; i < results.length; i++) {
+            if (parseInt(results[i].stock_quantity) < 5) {
+                lowItems.push([results[i].id, results[i].product_name, results[i].department_name, '$' + results[i].price, results[i].stock_quantity]);
+            }
         }
-    }
-    console.log(lowItems.toString());
-    console.log("\n");
+        console.log(lowItems.toString());
+        console.log("\n");
+    });
+
     start();
 }
 /*If a manager selects `Add to Inventory`, the app displays a prompt that will let the manager "add more" 
@@ -81,7 +83,7 @@ of any item currently in the store. */
 function addInventory() {
     var table = new Table({
         head: ['ID', 'Product', 'Category', 'Price', 'Quantity'],
-        colWidths: [5, 25, 25, 25, 25]
+        colWidths: [5, 15, 15, 15, 15]
     });
     connection.query("SELECT * FROM products", function(err, results) {
         if (err) throw err;

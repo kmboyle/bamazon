@@ -7,3 +7,5 @@ The inventory count will be updated based on how many items were purchased.
 The manager will be able to see items listed, check on low inventory, add inventory, and also add new products to inventory.
 
 The supervisor can see product sales, total profit, and can add new departments.
+
+watch the demo: https://www.youtube.com/watch?v=ZwjY312olH4

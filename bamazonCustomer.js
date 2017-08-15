@@ -23,7 +23,7 @@ function start() {
     //start the database connection and display the product table
     var table = new Table({
         head: ['ID', 'Product', 'Category', 'Price', 'Quantity'],
-        colWidths: [5, 25, 25, 25, 25]
+        colWidths: [5, 15, 15, 15, 15]
     });
     connection.query("SELECT * FROM products", function(err, results) {
         if (err) throw err;

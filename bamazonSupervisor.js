@@ -44,7 +44,7 @@ function viewSales() {
 
     var table = new Table({
         head: ['ID', 'Department', 'Over Head Costs', 'Product Sales', 'Total Profit'],
-        colWidths: [5, 25, 25, 25, 25]
+        colWidths: [5, 15, 15, 15, 15]
     });
 
     connection.query("SELECT departments.department_id, departments.over_head_costs, departments.department_name, SUM(products.product_sales) AS product_sales" +
