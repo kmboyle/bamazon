@@ -3,6 +3,9 @@ var inquirer = require("inquirer");
 var Table = require('cli-table');
 var split = require('split-object');
 var toArray = require('object-values-to-array');
+var file = 'products.js';
+var fs = require('fs');
+var gross = ["", 0];
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -29,9 +32,9 @@ function start() {
 
         } else if (answers.choice === "Create New Department") {
             newDept();
-        } else if (answers.choice === "Highest Grossing Department")
-
-        else {
+        } else if (answers.choice === "Highest Grossing Department") {
+            highestSales();
+        } else if (answers.choice === "Exit") {
             console.log("Thanks for visiting, have a nice day!");
             connection.end();
         }
@@ -56,12 +59,13 @@ function viewSales() {
             if (err) throw err;
 
             for (var i = 0; i < results.length; i++) {
+
                 arr.push(toArray(results[i]));
                 /*The `total_profit` column is calculated using the difference between 
                 `over_head_costs` and `product_sales`.  product_sales is in the 'arr' array at index 3.*/
                 tProfit[i] = parseInt(arr[i][3]) - parseInt(results[i].over_head_costs);
                 dept.push(results[i].department_name);
-                //tSales.push(results[i].product_sales);
+
                 table.push([results[i].department_id, dept[i], '$' + results[i].over_head_costs, '$' + arr[i][3], '$' + tProfit[i]]);
                 /*Here I am attempting to update the departments table in the database with the department sales information
                 connection.query("UPDATE departments SET ? WHERE ?", {
@@ -77,8 +81,8 @@ function viewSales() {
             }
             console.log(table.toString());
             console.log("\n");
-            start();
 
+            start();
         });
 }
 //allows Supervisor to add a new deparment
@@ -139,4 +143,33 @@ function newDept() {
         }
     });
 
+}
+
+function highestSales() {
+    //mySQL query to get profit and overhead from database
+    connection.query("SELECT departments.department_name, SUM(products.product_sales) AS Sales, " +
+        "SUM(products.product_sales)-departments.over_head_costs AS Profit from products " +
+        "JOIN departments ON products.department_name=departments.department_name " +
+        "GROUP BY departments.department_name",
+        function(err, results) {
+            if (err) throw err;
+            //set initial values to higehst department for comparison
+            gross[0] = results[0].department_name;
+            gross[1] = results[0].Profit;
+
+            for (var i = 0; i < results.length; i++) {
+                //check each profit amount to see if it is greater than initial value.  If it is, set as highest value
+                if (results[i].Profit > gross[1]) {
+                    gross[0] = results[i].department_name;
+                    gross[1] = results[i].Profit;
+
+                }
+
+            }
+            console.log(`
+Highest grossing department is: ${gross[0]}
+Total Gross Sales (Sales less Over Head): ${gross[1]}
+`);
+            start();
+        });
 }

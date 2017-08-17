@@ -3,8 +3,8 @@ var inquirer = require("inquirer");
 var Table = require('cli-table');
 var jsonfile = require('jsonfile');
 var split = require('split-object');
-
-var file = 'products.json';
+var file = 'products.js';
+var toArray = require('object-values-to-array');
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -92,17 +92,18 @@ function start() {
                     sale_amount: sales,
                     totalDeptSales: totalSales
                 };
+                //write saves the key and value names to the object
                 var write = split(obj).map(function(res) {
                     res.key;
                     res.value;
                     return res;
                 })
 
+                //this will create the object with key and value
                 var newObj = split.join(write);
                 objArr.push(newObj);
 
-
-                jsonfile.writeFile(file, objArr, { flag: 'a' }, function(err, obj) {
+                jsonfile.writeFile(file, objArr, { flag: 'a' }, { spaces: 2 }, function(err, obj) {
                     if (err) console.log(err);
                 })
 
