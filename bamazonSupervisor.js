@@ -3,8 +3,6 @@ var inquirer = require("inquirer");
 var Table = require('cli-table');
 var split = require('split-object');
 var toArray = require('object-values-to-array');
-var file = 'products.js';
-var fs = require('fs');
 var gross = ["", 0];
 
 var connection = mysql.createConnection({
