@@ -9,9 +9,9 @@ var toArray = require('object-values-to-array');
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
-    user: "root",
-    password: "438278kmb",
-    database: "bamazon"
+    user: "",
+    password: "",
+    database: ""
 });
 
 connection.connect(function(err) {
